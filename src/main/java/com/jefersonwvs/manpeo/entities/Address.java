@@ -16,6 +16,7 @@ public class Address {
 	private String number;
 	private String zipCode;
 	private String city;
+	private Boolean isMain;
 
 	@ManyToOne
 	@JoinColumn(name = "person_id")
@@ -25,12 +26,13 @@ public class Address {
 	}
 
 	public Address(Long id, String street, String number, String zipCode, String city,
-								 Person person) {
+								 Boolean isMain, Person person) {
 		this.id = id;
 		this.street = street;
 		this.number = number;
 		this.zipCode = zipCode;
 		this.city = city;
+		this.isMain = isMain;
 		this.person = person;
 	}
 
@@ -72,6 +74,14 @@ public class Address {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public Boolean getMain() {
+		return isMain;
+	}
+
+	public void setMain(Boolean main) {
+		isMain = main;
 	}
 
 	public Person getPerson() {
