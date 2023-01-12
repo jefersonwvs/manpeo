@@ -19,16 +19,15 @@ public class Person {
 	private LocalDate birthDate;
 
 	@OneToMany(mappedBy = "person")
-	private Set<Address> addresses = new HashSet<>();
+	private final Set<Address> addresses = new HashSet<>();
 
 	public Person() {
 	}
 
-	public Person(Long id, String name, LocalDate birthDate, Set<Address> addresses) {
+	public Person(Long id, String name, LocalDate birthDate) {
 		this.id = id;
 		this.name = name;
 		this.birthDate = birthDate;
-		this.addresses = addresses;
 	}
 
 	public Long getId() {
