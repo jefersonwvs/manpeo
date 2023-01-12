@@ -98,6 +98,14 @@ public class PersonService {
 		return new AddressDTO(address);
 	}
 
+	@Transactional(readOnly = true)
+	public List<AddressDTO> retrieveAllAddresses(Long personId) {
+		List<Address> entities = addressRepository.findAllByPersonId(personId);
+		return entities.stream()
+									 .map(AddressDTO::new)
+									 .toList();
+	}
+
 	@Transactional
 	public AddressDTO setMainAddress(Long personId, Long addressId) {
 

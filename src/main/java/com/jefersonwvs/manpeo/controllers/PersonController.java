@@ -70,6 +70,12 @@ public class PersonController {
 		return ResponseEntity.created(uri)
 												 .body(responseDTO);
 	}
+	@GetMapping("/{personId}/addresses")
+	public ResponseEntity<List<AddressDTO>> retrieveAllAddresses(@PathVariable Long personId) {
+		List<AddressDTO> list = personService.retrieveAllAddresses(personId);
+		return ResponseEntity.ok()
+												 .body(list);
+	}
 
 	@PutMapping("/{personId}/addresses/{addressId}")
 	public ResponseEntity<AddressDTO> setMainAddress(@PathVariable Long personId,
