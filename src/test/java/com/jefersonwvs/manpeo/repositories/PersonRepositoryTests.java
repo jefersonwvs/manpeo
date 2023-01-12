@@ -18,11 +18,13 @@ public class PersonRepositoryTests {
 
 	private long countTotalPeople;
 	private long existingId;
+	private long nonExisting;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		countTotalPeople = 2L;
 		existingId = 1L;
+		nonExisting = 1000L;
 	}
 
 	@Test
@@ -40,6 +42,12 @@ public class PersonRepositoryTests {
 	public void findByIdShouldReturnObjectWhenIdExists() {
 		Optional<Person> result = personRepository.findById(existingId);
 		Assertions.assertTrue(result.isPresent());
+	}
+
+	@Test
+	public void findByIdShouldReturnEmptyObjectWhenIdDoesNotExist() {
+		Optional<Person> result = personRepository.findById(nonExisting);
+		Assertions.assertTrue(result.isEmpty());
 	}
 
 }
