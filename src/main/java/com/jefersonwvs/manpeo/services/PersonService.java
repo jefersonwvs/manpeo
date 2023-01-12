@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +33,14 @@ public class PersonService {
 		Person entity = optEntity.orElseThrow(
 				() -> new NotFoundException("Pessoa (ID " + id + ") não encontrada."));
 		return new PersonWithAddressesDTO(entity);
+	}
+
+	@Transactional(readOnly = true)
+	public List<PersonDTO> retrieveAll() {
+		List<Person> entities = personRepository.findAll();
+		return entities.stream()
+									 .map(PersonDTO::new)
+									 .toList();
 	}
 
 }

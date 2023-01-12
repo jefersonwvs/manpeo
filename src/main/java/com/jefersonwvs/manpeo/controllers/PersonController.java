@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/people")
@@ -33,6 +34,13 @@ public class PersonController {
 		PersonWithAddressesDTO responseDTO = personService.retrieveById(id);
 		return ResponseEntity.ok()
 												 .body(responseDTO);
+	}
+
+	@GetMapping
+	public ResponseEntity<List<PersonDTO>> retrieveAll() {
+		List<PersonDTO> list = personService.retrieveAll();
+		return ResponseEntity.ok()
+												 .body(list);
 	}
 
 }
