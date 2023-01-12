@@ -1,6 +1,7 @@
 package com.jefersonwvs.manpeo.controllers;
 
 import com.jefersonwvs.manpeo.dtos.PersonDTO;
+import com.jefersonwvs.manpeo.dtos.PersonWithAddressesDTO;
 import com.jefersonwvs.manpeo.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +29,8 @@ public class PersonController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<PersonDTO> retrieveById(@PathVariable Long id) {
-		PersonDTO responseDTO = personService.retrieveById(id);
+	public ResponseEntity<PersonWithAddressesDTO> retrieveById(@PathVariable Long id) {
+		PersonWithAddressesDTO responseDTO = personService.retrieveById(id);
 		return ResponseEntity.ok()
 												 .body(responseDTO);
 	}

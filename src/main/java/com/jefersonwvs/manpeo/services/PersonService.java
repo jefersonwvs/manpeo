@@ -1,6 +1,7 @@
 package com.jefersonwvs.manpeo.services;
 
 import com.jefersonwvs.manpeo.dtos.PersonDTO;
+import com.jefersonwvs.manpeo.dtos.PersonWithAddressesDTO;
 import com.jefersonwvs.manpeo.entities.Person;
 import com.jefersonwvs.manpeo.repositories.PersonRepository;
 import com.jefersonwvs.manpeo.services.exceptions.NotFoundException;
@@ -26,11 +27,11 @@ public class PersonService {
 	}
 
 	@Transactional(readOnly = true)
-	public PersonDTO retrieveById(Long id) {
+	public PersonWithAddressesDTO retrieveById(Long id) {
 		Optional<Person> optEntity = personRepository.findById(id);
 		Person entity = optEntity.orElseThrow(
 				() -> new NotFoundException("Pessoa (ID " + id + ") não encontrada."));
-		return new PersonDTO(entity);
+		return new PersonWithAddressesDTO(entity);
 	}
 
 }
