@@ -5,6 +5,7 @@ import com.jefersonwvs.manpeo.dtos.PersonWithAddressesDTO;
 import com.jefersonwvs.manpeo.entities.Person;
 import com.jefersonwvs.manpeo.repositories.PersonRepository;
 import com.jefersonwvs.manpeo.services.exceptions.NotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,19 @@ public class PersonService {
 		return entities.stream()
 									 .map(PersonDTO::new)
 									 .toList();
+	}
+
+	@Transactional
+	public PersonDTO update(Long id, PersonDTO requestDTO) {
+		try {
+			Person entity = personRepository.getReferenceById(id);
+			entity.setName(requestDTO.getName());
+			entity.setBirthDate(requestDTO.getBirthDate());
+			entity = personRepository.save(entity);
+			return new PersonDTO(entity);
+		} catch (EntityNotFoundException e) {
+			throw new NotFoundException("Pessoa (ID " + id + ") não encontrada.");
+		}
 	}
 
 }

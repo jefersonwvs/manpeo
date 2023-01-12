@@ -43,4 +43,12 @@ public class PersonController {
 												 .body(list);
 	}
 
+	@PutMapping("/{id}")
+	public ResponseEntity<PersonDTO> update(@PathVariable Long id,
+																					@RequestBody PersonDTO requestDTO) {
+		PersonDTO responseDTO = personService.update(id, requestDTO);
+		return ResponseEntity.ok()
+												 .body(responseDTO);
+	}
+
 }
