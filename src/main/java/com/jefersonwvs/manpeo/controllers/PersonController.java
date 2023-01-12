@@ -71,4 +71,12 @@ public class PersonController {
 												 .body(responseDTO);
 	}
 
+	@PutMapping("/{personId}/addresses/{addressId}")
+	public ResponseEntity<AddressDTO> setMainAddress(@PathVariable Long personId,
+																									 @PathVariable Long addressId) {
+		AddressDTO responseDTO = personService.setMainAddress(personId, addressId);
+		return ResponseEntity.ok()
+												 .body(responseDTO);
+	}
+
 }
