@@ -1,8 +1,11 @@
 package com.jefersonwvs.manpeo.services;
 
+import com.jefersonwvs.manpeo.dtos.AddressDTO;
 import com.jefersonwvs.manpeo.dtos.PersonDTO;
 import com.jefersonwvs.manpeo.dtos.PersonWithAddressesDTO;
+import com.jefersonwvs.manpeo.entities.Address;
 import com.jefersonwvs.manpeo.entities.Person;
+import com.jefersonwvs.manpeo.repositories.AddressRepository;
 import com.jefersonwvs.manpeo.repositories.PersonRepository;
 import com.jefersonwvs.manpeo.services.exceptions.DatabaseException;
 import com.jefersonwvs.manpeo.services.exceptions.NotFoundException;
@@ -21,6 +24,9 @@ public class PersonService {
 
 	@Autowired
 	private PersonRepository personRepository;
+
+	@Autowired
+	private AddressRepository addressRepository;
 
 	@Transactional
 	public PersonDTO create(PersonDTO requestDTO) {
@@ -68,6 +74,26 @@ public class PersonService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DatabaseException("Violação de integridade.");
 		}
+	}
+
+	@Transactional
+	public AddressDTO createAddress(Long personId, AddressDTO requestDTO) {
+		Optional<Person> optPerson = personRepository.findById(personId);
+		Person person = optPerson.orElseThrow(
+				() -> new NotFoundException("Pessoa (ID " + personId + ") não encontrada."));
+
+		Address address = new Address();
+
+		address.setStreet(requestDTO.getStreet());
+		address.setNumber(requestDTO.getNumber());
+		address.setZipCode(requestDTO.getZipCode());
+		address.setCity(requestDTO.getCity());
+		address.setMain(false);
+		address.setPerson(person);
+
+		address = addressRepository.save(address);
+
+		return new AddressDTO(address);
 	}
 
 }

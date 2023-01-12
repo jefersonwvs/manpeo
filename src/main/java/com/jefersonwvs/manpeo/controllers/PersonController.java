@@ -1,5 +1,6 @@
 package com.jefersonwvs.manpeo.controllers;
 
+import com.jefersonwvs.manpeo.dtos.AddressDTO;
 import com.jefersonwvs.manpeo.dtos.PersonDTO;
 import com.jefersonwvs.manpeo.dtos.PersonWithAddressesDTO;
 import com.jefersonwvs.manpeo.services.PersonService;
@@ -56,6 +57,18 @@ public class PersonController {
 		personService.delete(id);
 		return ResponseEntity.noContent()
 												 .build();
+	}
+
+	@PostMapping("/{personId}/addresses")
+	public ResponseEntity<AddressDTO> createAddress(@PathVariable Long personId,
+																									@RequestBody AddressDTO requestDTO) {
+		AddressDTO responseDTO = personService.createAddress(personId, requestDTO);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+																				 .path("/{id}")
+																				 .buildAndExpand(responseDTO.getId())
+																				 .toUri();
+		return ResponseEntity.created(uri)
+												 .body(responseDTO);
 	}
 
 }
