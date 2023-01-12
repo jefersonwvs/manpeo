@@ -4,9 +4,12 @@ import com.jefersonwvs.manpeo.dtos.PersonDTO;
 import com.jefersonwvs.manpeo.dtos.PersonWithAddressesDTO;
 import com.jefersonwvs.manpeo.entities.Person;
 import com.jefersonwvs.manpeo.repositories.PersonRepository;
+import com.jefersonwvs.manpeo.services.exceptions.DatabaseException;
 import com.jefersonwvs.manpeo.services.exceptions.NotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +57,16 @@ public class PersonService {
 			return new PersonDTO(entity);
 		} catch (EntityNotFoundException e) {
 			throw new NotFoundException("Pessoa (ID " + id + ") não encontrada.");
+		}
+	}
+
+	public void delete(Long id) {
+		try {
+			personRepository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new NotFoundException("Pessoa (ID " + id + ") não encontrada.");
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException("Violação de integridade.");
 		}
 	}
 
