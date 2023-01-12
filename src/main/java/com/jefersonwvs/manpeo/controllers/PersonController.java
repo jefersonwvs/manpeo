@@ -19,6 +19,9 @@ public class PersonController {
 	@Autowired
 	private PersonService personService;
 
+	/***
+	 * Método para criar uma pessoa.
+	 */
 	@PostMapping
 	public ResponseEntity<PersonDTO> create(@RequestBody PersonDTO requestDTO) {
 		PersonDTO responseDTO = personService.create(requestDTO);
@@ -30,6 +33,9 @@ public class PersonController {
 												 .body(responseDTO);
 	}
 
+	/**
+	 * Método para consultar uma pessoa.
+	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<PersonWithAddressesDTO> retrieveById(@PathVariable Long id) {
 		PersonWithAddressesDTO responseDTO = personService.retrieveById(id);
@@ -37,6 +43,9 @@ public class PersonController {
 												 .body(responseDTO);
 	}
 
+	/**
+	 * Método para listar as pessoas cadastradas.
+	 * */
 	@GetMapping
 	public ResponseEntity<List<PersonDTO>> retrieveAll() {
 		List<PersonDTO> list = personService.retrieveAll();
@@ -44,6 +53,9 @@ public class PersonController {
 												 .body(list);
 	}
 
+	/**
+	 * Método para editar uma pessoa.
+	 * */
 	@PutMapping("/{id}")
 	public ResponseEntity<PersonDTO> update(@PathVariable Long id,
 																					@RequestBody PersonDTO requestDTO) {
@@ -52,6 +64,9 @@ public class PersonController {
 												 .body(responseDTO);
 	}
 
+	/**
+	 * Método para deletar uma pessoa.
+	 * */
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		personService.delete(id);
@@ -59,6 +74,9 @@ public class PersonController {
 												 .build();
 	}
 
+	/**
+	 * Método para cadastrar um novo endereço.
+	 * */
 	@PostMapping("/{personId}/addresses")
 	public ResponseEntity<AddressDTO> createAddress(@PathVariable Long personId,
 																									@RequestBody AddressDTO requestDTO) {
@@ -70,6 +88,10 @@ public class PersonController {
 		return ResponseEntity.created(uri)
 												 .body(responseDTO);
 	}
+
+	/**
+	 * Método para listar os endereços de uma pessoa.
+	 * */
 	@GetMapping("/{personId}/addresses")
 	public ResponseEntity<List<AddressDTO>> retrieveAllAddresses(@PathVariable Long personId) {
 		List<AddressDTO> list = personService.retrieveAllAddresses(personId);
@@ -77,6 +99,9 @@ public class PersonController {
 												 .body(list);
 	}
 
+	/**
+	 * Método para marcar uma endereço como principal.
+	 * */
 	@PutMapping("/{personId}/addresses/{addressId}")
 	public ResponseEntity<AddressDTO> setMainAddress(@PathVariable Long personId,
 																									 @PathVariable Long addressId) {
