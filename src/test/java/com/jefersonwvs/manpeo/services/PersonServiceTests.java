@@ -42,6 +42,7 @@ public class PersonServiceTests {
 	private List<Person> people;
 	private Address address;
 	private AddressDTO addressDTO;
+	private List<Address> addresses;
 
 	public PersonServiceTests() {
 	}
@@ -57,6 +58,7 @@ public class PersonServiceTests {
 		people = List.of(person);
 		address = Factory.createAddress();
 		addressDTO = Factory.createAddressDTO();
+		addresses = List.of(address);
 
 		// Mock do método personRepository.save()
 		Mockito.when(personRepository.save(ArgumentMatchers.any()))
@@ -78,6 +80,8 @@ public class PersonServiceTests {
 		Mockito.when(addressRepository.save(ArgumentMatchers.any()))
 					 .thenReturn(address);
 
+		Mockito.when(addressRepository.findAllByPersonId(existingId))
+					 .thenReturn(addresses);
 	}
 
 	@Test
@@ -142,6 +146,13 @@ public class PersonServiceTests {
 														() -> personService.createAddress(nonExistingId, addressDTO));
 		Mockito.verify(personRepository, Mockito.times(1))
 					 .findById(nonExistingId);
+	}
+
+	@Test
+	public void retrieveAllAddressesShouldReturnListOfObjects() {
+		List<AddressDTO> addressDTOS = personService.retrieveAllAddresses(existingId);
+		Assertions.assertNotNull(addressDTOS);
+		Assertions.assertEquals(1, addressDTOS.size());
 	}
 
 }
