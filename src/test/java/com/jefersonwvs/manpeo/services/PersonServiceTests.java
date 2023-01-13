@@ -5,6 +5,7 @@ import com.jefersonwvs.manpeo.entities.Person;
 import com.jefersonwvs.manpeo.repositories.PersonRepository;
 import com.jefersonwvs.manpeo.services.exceptions.NotFoundException;
 import com.jefersonwvs.manpeo.utils.Factory;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,6 +59,11 @@ public class PersonServiceTests {
 
 		Mockito.when(personRepository.findAll()).thenReturn(people);
 
+		Mockito.when(personRepository.getReferenceById(existingId))
+					 .thenReturn(person);
+		Mockito.when(personRepository.getReferenceById(nonExistingId))
+					 .thenThrow(EntityNotFoundException.class);
+
 	}
 
 	@Test
@@ -88,6 +94,25 @@ public class PersonServiceTests {
 		List<PersonDTO> peopleDTO = personService.retrieveAll();
 		Assertions.assertNotNull(peopleDTO);
 		Assertions.assertEquals(1, peopleDTO.size());
+	}
+
+	@Test
+	public void updateShouldReturnObjectWhenIdExists() {
+		PersonDTO responseDTO = personService.update(existingId, requestDTO);
+		Assertions.assertNotNull(responseDTO);
+		Assertions.assertEquals(existingId, responseDTO.getId());
+		Mockito.verify(personRepository, Mockito.times(1))
+					 .getReferenceById(existingId);
+		Mockito.verify(personRepository, Mockito.times(1))
+					 .save(person);
+	}
+
+	@Test
+	public void updateShouldThrowNotFoundExceptionWhenIdDoesNotExist() {
+		Assertions.assertThrows(NotFoundException.class,
+														() -> personService.update(nonExistingId, requestDTO));
+		Mockito.verify(personRepository, Mockito.times(1))
+					 .getReferenceById(nonExistingId);
 	}
 
 }
