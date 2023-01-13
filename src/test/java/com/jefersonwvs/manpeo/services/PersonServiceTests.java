@@ -36,6 +36,7 @@ public class PersonServiceTests {
 
 	private long existingId;
 	private long nonExistingId;
+	private long addressId;
 
 	private Person person;
 	private PersonDTO requestDTO;
@@ -44,14 +45,12 @@ public class PersonServiceTests {
 	private AddressDTO addressDTO;
 	private List<Address> addresses;
 
-	public PersonServiceTests() {
-	}
-
 	@BeforeEach
 	public void setUp() throws Exception {
 
 		existingId = 1L;
 		nonExistingId = 1000L;
+		addressId = 1L;
 
 		person = Factory.createPerson();
 		requestDTO = Factory.createPersonDTO();
@@ -82,6 +81,10 @@ public class PersonServiceTests {
 
 		Mockito.when(addressRepository.findAllByPersonId(existingId))
 					 .thenReturn(addresses);
+
+		Mockito.when(addressRepository.findAddressByIdAndPersonId(addressId, existingId))
+					 .thenReturn(Optional.of(address));
+
 	}
 
 	@Test
@@ -153,6 +156,32 @@ public class PersonServiceTests {
 		List<AddressDTO> addressDTOS = personService.retrieveAllAddresses(existingId);
 		Assertions.assertNotNull(addressDTOS);
 		Assertions.assertEquals(1, addressDTOS.size());
+	}
+
+	@Test
+	public void setMainAddressShouldSetAnAddressAsMainWhenPersonAndAddressExists() {
+		AddressDTO addressDTO = personService.setMainAddress(existingId, addressId);
+		Assertions.assertNotNull(addressDTO);
+		Assertions.assertEquals(true, addressDTO.getMain());
+		Mockito.verify(personRepository, Mockito.times(1))
+					 .findById(existingId);
+	}
+
+	@Test
+	public void setMainAddressShouldThrowNotFoundExceptionWhenPersonDoesNotExist() {
+		Assertions.assertThrows(NotFoundException.class,
+														() -> personService.setMainAddress(nonExistingId, addressId));
+		Mockito.verify(personRepository, Mockito.times(1))
+					 .findById(nonExistingId);
+	}
+
+	@Test
+	public void setMainAddressShouldThrowNotFoundExceptionWhenPersonDoesNotHaveTheAddress() {
+		long nonExistingAddressId = 6L;
+		Assertions.assertThrows(NotFoundException.class,
+														() -> personService.setMainAddress(existingId, nonExistingAddressId));
+		Mockito.verify(personRepository, Mockito.times(1))
+					 .findById(existingId);
 	}
 
 }
