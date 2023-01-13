@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
@@ -31,6 +32,7 @@ public class PersonServiceTests {
 
 	private Person person;
 	private PersonDTO requestDTO;
+	private List<Person> people;
 
 	public PersonServiceTests() {
 	}
@@ -43,6 +45,7 @@ public class PersonServiceTests {
 
 		person = Factory.createPerson();
 		requestDTO = Factory.createPersonDTO();
+		people = List.of(person);
 
 		// Mock do método personRepository.save()
 		Mockito.when(personRepository.save(ArgumentMatchers.any()))
@@ -52,6 +55,8 @@ public class PersonServiceTests {
 					 .thenReturn(Optional.of(person));
 		Mockito.when(personRepository.findById(nonExistingId))
 					 .thenReturn(Optional.empty());
+
+		Mockito.when(personRepository.findAll()).thenReturn(people);
 
 	}
 
@@ -76,6 +81,13 @@ public class PersonServiceTests {
 														() -> personService.retrieveById(nonExistingId));
 		Mockito.verify(personRepository, Mockito.times(1))
 					 .findById(nonExistingId);
+	}
+
+	@Test
+	public void retrieveAllShouldReturnListOfObjects() {
+		List<PersonDTO> peopleDTO = personService.retrieveAll();
+		Assertions.assertNotNull(peopleDTO);
+		Assertions.assertEquals(1, peopleDTO.size());
 	}
 
 }
