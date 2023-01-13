@@ -57,4 +57,11 @@ public class AddressRepositoryTests {
 		Assertions.assertTrue(optAddress.isEmpty());
 	}
 
+	@Test
+	public void findMainAddressByPersonIdShouldReturnObjectWhenIdExists() {
+		Optional<Address> optAddress =
+				addressRepository.findMainAddressByPersonId(idOfPersonWithAddresses);
+		Assertions.assertTrue(optAddress.isPresent());
+	}
+
 }
