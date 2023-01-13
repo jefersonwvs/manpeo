@@ -1,7 +1,10 @@
 package com.jefersonwvs.manpeo.services;
 
+import com.jefersonwvs.manpeo.dtos.AddressDTO;
 import com.jefersonwvs.manpeo.dtos.PersonDTO;
+import com.jefersonwvs.manpeo.entities.Address;
 import com.jefersonwvs.manpeo.entities.Person;
+import com.jefersonwvs.manpeo.repositories.AddressRepository;
 import com.jefersonwvs.manpeo.repositories.PersonRepository;
 import com.jefersonwvs.manpeo.services.exceptions.NotFoundException;
 import com.jefersonwvs.manpeo.utils.Factory;
@@ -28,12 +31,17 @@ public class PersonServiceTests {
 	@Mock
 	private PersonRepository personRepository;
 
+	@Mock
+	private AddressRepository addressRepository;
+
 	private long existingId;
 	private long nonExistingId;
 
 	private Person person;
 	private PersonDTO requestDTO;
 	private List<Person> people;
+	private Address address;
+	private AddressDTO addressDTO;
 
 	public PersonServiceTests() {
 	}
@@ -47,6 +55,8 @@ public class PersonServiceTests {
 		person = Factory.createPerson();
 		requestDTO = Factory.createPersonDTO();
 		people = List.of(person);
+		address = Factory.createAddress();
+		addressDTO = Factory.createAddressDTO();
 
 		// Mock do método personRepository.save()
 		Mockito.when(personRepository.save(ArgumentMatchers.any()))
@@ -57,12 +67,16 @@ public class PersonServiceTests {
 		Mockito.when(personRepository.findById(nonExistingId))
 					 .thenReturn(Optional.empty());
 
-		Mockito.when(personRepository.findAll()).thenReturn(people);
+		Mockito.when(personRepository.findAll())
+					 .thenReturn(people);
 
 		Mockito.when(personRepository.getReferenceById(existingId))
 					 .thenReturn(person);
 		Mockito.when(personRepository.getReferenceById(nonExistingId))
 					 .thenThrow(EntityNotFoundException.class);
+
+		Mockito.when(addressRepository.save(ArgumentMatchers.any()))
+					 .thenReturn(address);
 
 	}
 
@@ -113,6 +127,21 @@ public class PersonServiceTests {
 														() -> personService.update(nonExistingId, requestDTO));
 		Mockito.verify(personRepository, Mockito.times(1))
 					 .getReferenceById(nonExistingId);
+	}
+
+	@Test
+	public void createAddressShouldReturnObjectWhenPersonExists() {
+		AddressDTO responseDTO = personService.createAddress(existingId, addressDTO);
+		Assertions.assertNotNull(responseDTO);
+		Assertions.assertEquals(address.getId(), responseDTO.getId());
+	}
+
+	@Test
+	public void createAddressShouldThrowNotFoundExceptionWhenIdDoesNotExist() {
+		Assertions.assertThrows(NotFoundException.class,
+														() -> personService.createAddress(nonExistingId, addressDTO));
+		Mockito.verify(personRepository, Mockito.times(1))
+					 .findById(nonExistingId);
 	}
 
 }
