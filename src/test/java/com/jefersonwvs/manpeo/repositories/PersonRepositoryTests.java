@@ -26,7 +26,7 @@ public class PersonRepositoryTests {
 	void setUp() throws Exception {
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 
-		countTotalPeople = 2L;
+		countTotalPeople = 3L;
 		existingId = 1L;
 		nonExisting = 1000L;
 	}
