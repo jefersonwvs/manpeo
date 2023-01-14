@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.time.LocalDate;
 import java.util.Optional;
+import java.util.TimeZone;
 
 @DataJpaTest
 public class PersonRepositoryTests {
@@ -22,6 +24,8 @@ public class PersonRepositoryTests {
 
 	@BeforeEach
 	void setUp() throws Exception {
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+
 		countTotalPeople = 2L;
 		existingId = 1L;
 		nonExisting = 1000L;
@@ -48,6 +52,24 @@ public class PersonRepositoryTests {
 	public void findByIdShouldReturnEmptyObjectWhenIdDoesNotExist() {
 		Optional<Person> result = personRepository.findById(nonExisting);
 		Assertions.assertTrue(result.isEmpty());
+	}
+
+	@Test
+	public void saveShouldUpdateObjectWhenIdExists() {
+		Optional<Person> optPerson = personRepository.findById(existingId);
+		Person person = optPerson.get();
+		Assertions.assertEquals("Machado de Assis", person.getName());
+		System.out.println(person.getBirthDate());
+		Assertions.assertEquals(LocalDate.parse("1839-06-21"), person.getBirthDate());
+
+		person = Factory.createPerson();
+		person.setId(existingId);
+		personRepository.save(person);
+
+		Optional<Person> optUpdated = personRepository.findById(existingId);
+		Person updated = optUpdated.get();
+		Assertions.assertEquals("Rui Barbosa", updated.getName());
+		Assertions.assertEquals(LocalDate.parse("1902-05-03"), updated.getBirthDate());
 	}
 
 }
