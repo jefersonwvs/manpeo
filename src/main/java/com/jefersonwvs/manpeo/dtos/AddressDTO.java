@@ -15,7 +15,7 @@ public class AddressDTO {
 	}
 
 	public AddressDTO(Long id, String street, String number, String zipCode, String city,
-										Boolean isMain) {
+			Boolean isMain) {
 		this.id = id;
 		this.street = street;
 		this.number = number;

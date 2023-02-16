@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
@@ -26,7 +25,7 @@ public class ControllerExceptionHandler {
 		error.setPath(request.getRequestURI());
 
 		return ResponseEntity.status(status)
-												 .body(error);
+				.body(error);
 	}
 
 	@ExceptionHandler(DatabaseException.class)

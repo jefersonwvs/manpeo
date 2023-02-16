@@ -61,29 +61,29 @@ public class PersonServiceTests {
 
 		// Mock do método personRepository.save()
 		Mockito.when(personRepository.save(ArgumentMatchers.any()))
-					 .thenReturn(person);
+				.thenReturn(person);
 
 		Mockito.when(personRepository.findById(existingId))
-					 .thenReturn(Optional.of(person));
+				.thenReturn(Optional.of(person));
 		Mockito.when(personRepository.findById(nonExistingId))
-					 .thenReturn(Optional.empty());
+				.thenReturn(Optional.empty());
 
 		Mockito.when(personRepository.findAll())
-					 .thenReturn(people);
+				.thenReturn(people);
 
 		Mockito.when(personRepository.getReferenceById(existingId))
-					 .thenReturn(person);
+				.thenReturn(person);
 		Mockito.when(personRepository.getReferenceById(nonExistingId))
-					 .thenThrow(EntityNotFoundException.class);
+				.thenThrow(EntityNotFoundException.class);
 
 		Mockito.when(addressRepository.save(ArgumentMatchers.any()))
-					 .thenReturn(address);
+				.thenReturn(address);
 
 		Mockito.when(addressRepository.findAllByPersonId(existingId))
-					 .thenReturn(addresses);
+				.thenReturn(addresses);
 
 		Mockito.when(addressRepository.findAddressByIdAndPersonId(addressId, existingId))
-					 .thenReturn(Optional.of(address));
+				.thenReturn(Optional.of(address));
 
 	}
 
@@ -99,15 +99,15 @@ public class PersonServiceTests {
 		PersonDTO responseDTO = personService.retrieveById(existingId);
 		Assertions.assertNotNull(responseDTO);
 		Mockito.verify(personRepository, Mockito.times(1))
-					 .findById(existingId);
+				.findById(existingId);
 	}
 
 	@Test
 	public void retrieveByIdShouldThrowNotFoundExceptionWhenIdDoesNotExist() {
 		Assertions.assertThrows(NotFoundException.class,
-														() -> personService.retrieveById(nonExistingId));
+				() -> personService.retrieveById(nonExistingId));
 		Mockito.verify(personRepository, Mockito.times(1))
-					 .findById(nonExistingId);
+				.findById(nonExistingId);
 	}
 
 	@Test
@@ -123,17 +123,17 @@ public class PersonServiceTests {
 		Assertions.assertNotNull(responseDTO);
 		Assertions.assertEquals(existingId, responseDTO.getId());
 		Mockito.verify(personRepository, Mockito.times(1))
-					 .getReferenceById(existingId);
+				.getReferenceById(existingId);
 		Mockito.verify(personRepository, Mockito.times(1))
-					 .save(person);
+				.save(person);
 	}
 
 	@Test
 	public void updateShouldThrowNotFoundExceptionWhenIdDoesNotExist() {
 		Assertions.assertThrows(NotFoundException.class,
-														() -> personService.update(nonExistingId, requestDTO));
+				() -> personService.update(nonExistingId, requestDTO));
 		Mockito.verify(personRepository, Mockito.times(1))
-					 .getReferenceById(nonExistingId);
+				.getReferenceById(nonExistingId);
 	}
 
 	@Test
@@ -146,9 +146,9 @@ public class PersonServiceTests {
 	@Test
 	public void createAddressShouldThrowNotFoundExceptionWhenIdDoesNotExist() {
 		Assertions.assertThrows(NotFoundException.class,
-														() -> personService.createAddress(nonExistingId, addressDTO));
+				() -> personService.createAddress(nonExistingId, addressDTO));
 		Mockito.verify(personRepository, Mockito.times(1))
-					 .findById(nonExistingId);
+				.findById(nonExistingId);
 	}
 
 	@Test
@@ -164,24 +164,24 @@ public class PersonServiceTests {
 		Assertions.assertNotNull(addressDTO);
 		Assertions.assertEquals(true, addressDTO.getMain());
 		Mockito.verify(personRepository, Mockito.times(1))
-					 .findById(existingId);
+				.findById(existingId);
 	}
 
 	@Test
 	public void setMainAddressShouldThrowNotFoundExceptionWhenPersonDoesNotExist() {
 		Assertions.assertThrows(NotFoundException.class,
-														() -> personService.setMainAddress(nonExistingId, addressId));
+				() -> personService.setMainAddress(nonExistingId, addressId));
 		Mockito.verify(personRepository, Mockito.times(1))
-					 .findById(nonExistingId);
+				.findById(nonExistingId);
 	}
 
 	@Test
 	public void setMainAddressShouldThrowNotFoundExceptionWhenPersonDoesNotHaveTheAddress() {
 		long nonExistingAddressId = 6L;
 		Assertions.assertThrows(NotFoundException.class,
-														() -> personService.setMainAddress(existingId, nonExistingAddressId));
+				() -> personService.setMainAddress(existingId, nonExistingAddressId));
 		Mockito.verify(personRepository, Mockito.times(1))
-					 .findById(existingId);
+				.findById(existingId);
 	}
 
 }

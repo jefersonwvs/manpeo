@@ -46,14 +46,14 @@ public class AddressRepositoryTests {
 	@Test
 	public void findAddressByIdAndPersonIdShouldReturnObjectWhenIdExists() {
 		Optional<Address> optAddress = addressRepository.findAddressByIdAndPersonId(existingAddressId,
-																																						 idOfPersonWithAddresses);
+				idOfPersonWithAddresses);
 		Assertions.assertTrue(optAddress.isPresent());
 	}
 
 	@Test
 	public void findAddressByIdAndPersonIdShouldReturnEmptyObjectWhenIdDoesNotExist() {
 		Optional<Address> optAddress = addressRepository.findAddressByIdAndPersonId(nonExistingAddressId,
-																																								idOfPersonWithAddresses);
+				idOfPersonWithAddresses);
 		Assertions.assertTrue(optAddress.isEmpty());
 	}
 

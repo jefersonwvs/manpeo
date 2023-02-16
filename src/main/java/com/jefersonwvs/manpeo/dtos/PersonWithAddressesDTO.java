@@ -19,7 +19,7 @@ public class PersonWithAddressesDTO extends PersonDTO {
 	public PersonWithAddressesDTO(Person entity) {
 		super(entity);
 		entity.getAddresses()
-					.forEach(address -> this.addresses.add(new AddressDTO(address)));
+				.forEach(address -> this.addresses.add(new AddressDTO(address)));
 	}
 
 	public Set<AddressDTO> getAddresses() {

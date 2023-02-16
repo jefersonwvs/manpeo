@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class PersonService {
@@ -51,8 +49,8 @@ public class PersonService {
 	public List<PersonDTO> retrieveAll() {
 		List<Person> entities = personRepository.findAll();
 		return entities.stream()
-									 .map(PersonDTO::new)
-									 .toList();
+				.map(PersonDTO::new)
+				.toList();
 	}
 
 	@Transactional
@@ -102,8 +100,8 @@ public class PersonService {
 	public List<AddressDTO> retrieveAllAddresses(Long personId) {
 		List<Address> entities = addressRepository.findAllByPersonId(personId);
 		return entities.stream()
-									 .map(AddressDTO::new)
-									 .toList();
+				.map(AddressDTO::new)
+				.toList();
 	}
 
 	@Transactional
@@ -120,10 +118,10 @@ public class PersonService {
 		});
 
 		Optional<Address> optNewMainAddress = addressRepository.findAddressByIdAndPersonId(addressId,
-																																											 personId);
+				personId);
 		Address newMainAddress = optNewMainAddress.orElseThrow(
 				() -> new NotFoundException("Endereço (ID " + addressId + ") não encontrado ou não " +
-																				"pertence à pessoa (ID " + personId + ")."));
+						"pertence à pessoa (ID " + personId + ")."));
 		newMainAddress.setMain(true);
 		newMainAddress = addressRepository.save(newMainAddress);
 
